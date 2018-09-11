@@ -12,10 +12,11 @@ Assmebler writtin in python
 ```
 
 # Instructions
-```
-    NOP - No Operation
 
-    SET - Sets a register to an immediate value
+    >NOP - No Operation
+        ```NOP```
+
+    >SET - Sets a register to an immediate value
         SET <REG>,<IMM>
 
     PSH - Pushes a register ontop of the stack
@@ -66,7 +67,7 @@ Assmebler writtin in python
     POKE - Writes the value ontop of the stack at the specified address
         POKE <REG>
 
-``` 
+
 
 # Assembling the firmware and applications
 ```
