@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MicroVM", "MicroVM.vcxproj", "{65B431FE-E679-4F3E-B96B-D790B65B1577}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Debug|x64.ActiveCfg = Debug|x64
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Debug|x64.Build.0 = Debug|x64
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Debug|x86.ActiveCfg = Debug|Win32
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Debug|x86.Build.0 = Debug|Win32
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Release|x64.ActiveCfg = Release|x64
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Release|x64.Build.0 = Release|x64
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Release|x86.ActiveCfg = Release|Win32
+		{65B431FE-E679-4F3E-B96B-D790B65B1577}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89F8D85E-F64F-460E-A668-494883FD5A76}
+	EndGlobalSection
+EndGlobal

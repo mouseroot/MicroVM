@@ -218,21 +218,15 @@ int main(int argc, char *argv[]) {
 	//load_data(&vm, 0, firmware, sizeof(firmware));
 	if (load_file(&vm, 0, "fw.bin") > -1) {
 		printf("Firmware loaded\n");
+		load_file(&vm, Entrypoint, "main.bin");
 		vm.running = 1;
 	}
 	else {
 		printf("Firmware was not loaded\n");
 		vm.running = 0;
 	}
-
-	//Load program
-	//load_data(&vm, Entrypoint, app, sizeof(app));
-	load_file(&vm, Entrypoint, "main.bin");
-
-	//display_memory(&vm);
-	
-
-	vm.running = 1;
+	printf("Press Enter to continue\n");
+	getchar();
 
 	while (vm.running) {
 

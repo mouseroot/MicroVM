@@ -1,0 +1,3 @@
+﻿  main.c
+c:\users\jon\source\repos\microvm\main.c(211): warning C4715: 'get_register': not all control paths return a value
+  MicroVM.vcxproj -> C:\Users\Jon\source\repos\MicroVM\Debug\MicroVM.exe
