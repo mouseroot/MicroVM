@@ -19,7 +19,7 @@ SYS = 7
 CMP = 8
 JMP = 9
 HLT = 10
-JNZ = 11
+JNE = 11
 CALL = 12
 RET = 13
 
@@ -42,10 +42,6 @@ def get_reg(reg):
 
 def get_syscall(syscall):
     syscall = syscall.lower()
-    if syscall == "write_char":
-        return WRITE_CHAR
-    elif syscall == "read_char":
-        return READ_CHAR
 
 def translate(name):
     org = name
@@ -72,7 +68,7 @@ def translate(name):
     elif name == "HLT":
         return HLT
     elif name == "JNE":
-        return JNZ
+        return JNE
     elif name == "CALL":
         return CALL
     elif name == "RET":
