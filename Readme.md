@@ -1,6 +1,7 @@
 # MicroVM
 Virtual machine written in _C_
 
+[MicroVM Wiki](Http://github.com/mouseroot/MicroVM/wiki)
 
 # Specifications
 
