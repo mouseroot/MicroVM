@@ -1,19 +1,19 @@
 # MicroVM
 Virtual machine written in _C_
 
-Assmebler writtin in _python_
+
+# Specifications
 
 
-4 Registers
-```
-    R1 General
-    R2 Purpose
-    R3 Registers
-    R4 ...
-```
+* R1-R4 General Registers
+* SP - Stack Pointer
+* IP - Instruction Pointer
+* 255 Bytes of memory
+* 100 Byte Stack
+* 17+ Instructions
+* Assembler writtin in pure _python_
+* VM writtin in pure _C_
 
-SP - Stack Pointer
-IP - Instruction Pointer
 
 # Instructions
 
