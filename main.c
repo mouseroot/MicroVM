@@ -80,11 +80,19 @@ int fsize(char *filename) {
 	return -1;
 }
 
+void input(char *prompt, char *buffer)
+{
+	printf(prompt);
+	fgets(buffer, 1024, stdin);
+}
+
 //Displays Hi and Lo memory
 void display_memory(MicroVM *vm) {
 	printf("Hi Memory (Firmware)\n");
-	printf("#%d\t%02X %02X %02X %02X %02X\n", 0, vm->memory[0], vm->memory[1], vm->memory[2], vm->memory[3], vm->memory[4]);
-	printf("#%d\t%02X %02X %02X %02X %02X\n", 5, vm->memory[5], vm->memory[6], vm->memory[7], vm->memory[8], vm->memory[9]);
+	for (int i = 0; i < 80; i += 5) {
+		printf("#%d\t%02X %02X %02X %02X %02X\n", i, vm->memory[i], vm->memory[i+1], vm->memory[i+2], vm->memory[i+3], vm->memory[i+4]);
+	}
+	//printf("#%d\t%02X %02X %02X %02X %02X\n", 5, vm->memory[5], vm->memory[6], vm->memory[7], vm->memory[8], vm->memory[9]);
 	printf("Low Memory\n");
 	for (int i = 0; i < 100; i+=5) {
 		printf("#%d\t%02X %02X %02X %02X %02X\n",Entrypoint+i, vm->memory[Entrypoint + i], vm->memory[Entrypoint + i+1], vm->memory[Entrypoint + i + 2], vm->memory[Entrypoint + i + 3], vm->memory[Entrypoint + i + 4]);
@@ -218,15 +226,29 @@ int main(int argc, char *argv[]) {
 	//load_data(&vm, 0, firmware, sizeof(firmware));
 	if (load_file(&vm, 0, "fw.bin") > -1) {
 		printf("Firmware loaded\n");
-		load_file(&vm, Entrypoint, "main.bin");
-		vm.running = 1;
+		char filename[255];
+		input("Enter filename: ", filename);
+		char *p = strchr(filename, '\n');
+		*p = 0;
+		int size = load_file(&vm, Entrypoint, filename);
+		if (size > -1) {
+			printf("Loaded %s\n", filename);
+			vm.running = 1;
+		}
+		else {
+			vm.running = 0;
+			printf("Error loading %s\n", filename);
+			printf("Press Enter to continue\n");
+			getchar();
+		}
 	}
 	else {
 		printf("Firmware was not loaded\n");
-		vm.running = 0;
+		vm.running = 0;	
+		printf("Press Enter to continue\n");
+		getchar();
 	}
-	printf("Press Enter to continue\n");
-	getchar();
+
 
 	while (vm.running) {
 
@@ -245,6 +267,15 @@ int main(int argc, char *argv[]) {
 			int value = vm.memory[vm.registers.ip + 2];
 			int rval = get_register(&vm, dest);
 			int sum = (rval + value);
+			set_register(&vm, dest, sum);
+			vm.registers.ip += 2;
+		}
+
+		if (op == SUB) {
+			int dest = vm.memory[vm.registers.ip + 1];
+			int value = vm.memory[vm.registers.ip + 2];
+			int rval = get_register(&vm, dest);
+			int sum = (rval - value);
 			set_register(&vm, dest, sum);
 			vm.registers.ip += 2;
 		}
@@ -301,7 +332,7 @@ int main(int argc, char *argv[]) {
 			int r_index = vm.memory[vm.registers.ip + 1];
 			int value = pop_stack(&vm);
 			set_register(&vm, r_index, value);
-			printf("POP R%d\n", value);
+			printf("POP R%d %d\n", r_index,value);
 			vm.registers.ip++;
 		}
 
@@ -309,7 +340,7 @@ int main(int argc, char *argv[]) {
 			int addr = vm.memory[vm.registers.ip + 1];
 			printf("Call to %d\n", addr);
 			push_stack(&vm, vm.registers.ip + 1);
-			vm.registers.ip = addr - 1;
+			vm.registers.ip = addr;
 		}
 
 		if (op == JMP) {
@@ -345,6 +376,18 @@ int main(int argc, char *argv[]) {
 		if (op == NOP) {
 			vm.registers.ip++;
 			printf("NOP\n");
+		}
+
+		if (op == SYS) {
+			int syscall = vm.memory[vm.registers.ip + 1];
+			if (syscall == 0) {
+				int addr = get_register(&vm, R1) + 1;
+				int count = get_register(&vm, R2);
+				for (int i = 0; i >= count; i++) {
+					putchar(vm.memory[addr + i]);
+				}
+
+			}
 		}
 
 		vm.registers.ip++;

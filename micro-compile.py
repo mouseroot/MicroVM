@@ -44,62 +44,65 @@ def get_syscall(syscall):
     syscall = syscall.lower()
 
 def translate(name):
-    org = name
-    name = name.upper()
+    if type(name) is str:
+        org = name
+        name = name.upper()
 
-    if name == "SET":
-        return SET
-    elif name == "PSH":
-        return PSH
-    elif name == "POP":
-        return POP
-    elif name == "ADD":
-        return ADD
-    elif name == "SUB":
-        return SUB
-    elif name == "MOV":
-        return MOV
-    elif name == "SYS":
-        return SYS
-    elif name == "CMP":
-        return CMP
-    elif name == "JMP":
-        return JMP
-    elif name == "HLT":
-        return HLT
-    elif name == "JNE":
-        return JNE
-    elif name == "CALL":
-        return CALL
-    elif name == "RET":
-        return RET
-    elif name == "NOP":
-        return NOP
-    elif name == "JE":
-        return JE
-    
-    elif name == "PEEK":
-        return PEEK
-    elif name == "POKE":
-        return POKE
+        if name == "SET":
+            return SET
+        elif name == "PSH":
+            return PSH
+        elif name == "POP":
+            return POP
+        elif name == "ADD":
+            return ADD
+        elif name == "SUB":
+            return SUB
+        elif name == "MOV":
+            return MOV
+        elif name == "SYS":
+            return SYS
+        elif name == "CMP":
+            return CMP
+        elif name == "JMP":
+            return JMP
+        elif name == "HLT":
+            return HLT
+        elif name == "JNE":
+            return JNE
+        elif name == "CALL":
+            return CALL
+        elif name == "RET":
+            return RET
+        elif name == "NOP":
+            return NOP
+        elif name == "JE":
+            return JE
+        
+        elif name == "PEEK":
+            return PEEK
+        elif name == "POKE":
+            return POKE
 
 
-    elif name == "R1":
-        return R1
-    elif name == "R2":
-        return R2
-    elif name == "R3":
-        return R3
-    elif name == "R4":
-        return R4
+        elif name == "R1":
+            return R1
+        elif name == "R2":
+            return R2
+        elif name == "R3":
+            return R3
+        elif name == "R4":
+            return R4
 
-    elif name == "SP":
-        return SP
-    elif name == "IP":
-        return IP
+        elif name == "SP":
+            return SP
+        elif name == "IP":
+            return IP
 
+        else:
+            return org
     else:
-        return org
+        return name
 
 
 def remove_comment(line):
@@ -116,6 +119,7 @@ with open(src_name) as inf:
     code = []
     labels = {}
     _vars = {}
+    data = []
     org = 100
     lines = inf.readlines()
     for line in lines:
@@ -134,6 +138,21 @@ with open(src_name) as inf:
                 #Skip comments
                 if line.startswith(";"):
                     pass
+
+                #Raw Data
+                elif line.startswith(".data"):
+                    if len(line.split(" ")) > 1:
+                        data = line.split(".data")[1]
+                        data = data.replace('"',"").replace("\n","").lstrip(' ')
+                        for index,item in enumerate(data):
+
+                            if item != '':
+                                print(index,item)
+                                if not item.isdigit():
+                                    code.append(ord(item))
+                                else:
+                                    code.append(int(item))
+
 
                 #Constants
                 elif "equ" in line:
@@ -175,10 +194,11 @@ with open(src_name) as inf:
 
     #get labels
     for index,co in enumerate(code):
-        if co.endswith(":"):
-            name = co.replace(":","")
-            labels[name] = index
-            code.remove(co)
+        if type(co) is str:
+            if co.endswith(":"):
+                name = co.replace(":","")
+                labels[name] = index
+                code.remove(co)
 
     #replace labels
     for it in code:
@@ -194,15 +214,23 @@ with open(src_name) as inf:
             val = _vars[v]
             code[index] = v.replace(v,val)
 
+    #clear blanks
+    for c in code:
+        if c == '':
+            code.remove(c)
+
     print(f"{len(code)} Bytes")
     fname = input("File to write>")
     path = f"MicroVM\Debug\{fname}"
-
+    print(code)
     with open(fname,"wb") as of:
         for i,op in enumerate(code):
             
             bit = translate(op)
             print(f"Writing {i} {bit} -> {op}")
-            of.write(int(bit).to_bytes(1,byteorder="big"))
+            try:
+                of.write(int(bit).to_bytes(1,byteorder="big"))
+            except ValueError:
+                print(f"Skipping Invalid Char {bit}")
 
 
